@@ -1,0 +1,6 @@
+oss:
+  qiniu:
+    domain: up-z1.qiniup.com
+    accessKey: rjlxyjQVTQzRUeEiHMp_DdGuwrREqnfYEwf1bK0W
+    secretKey: i-wsZ3TWmlC76FCEYxvuWOfbj-NwZ_v1UUIKcoRv
+    bucketName: manchesteruc

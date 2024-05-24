@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: fyp-backend-user-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/manchester_exploration?useSSL=false&serverTimezone=GMT
+    username: root
+    password: q9I3a2N7
+  session:
+    timeout: 86400
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      database: 0
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: delete_state
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+server:
+  port: 8102
+  servlet:
+    context-path: /api
+
+oss:
+  qiniu:
+    domain: up-z1.qiniup.com
+    accessKey: rjlxyjQVTQzRUeEiHMp_DdGuwrREqnfYEwf1bK0W
+    secretKey: i-wsZ3TWmlC76FCEYxvuWOfbj-NwZ_v1UUIKcoRv
+    bucketName: manchesteruc
