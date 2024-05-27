@@ -1,3 +1,7 @@
+server:
+  port: 8102
+  servlet:
+    context-path: /api/user
 spring:
   application:
     name: fyp-backend-user-service
@@ -17,6 +21,12 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      discovery:
+        service: fyp-backend-user-service
+
 
 mybatis-plus:
   configuration:
@@ -27,15 +37,3 @@ mybatis-plus:
       logic-delete-field: delete_state
       logic-delete-value: 1
       logic-not-delete-value: 0
-
-server:
-  port: 8102
-  servlet:
-    context-path: /api
-
-oss:
-  qiniu:
-    domain: up-z1.qiniup.com
-    accessKey: rjlxyjQVTQzRUeEiHMp_DdGuwrREqnfYEwf1bK0W
-    secretKey: i-wsZ3TWmlC76FCEYxvuWOfbj-NwZ_v1UUIKcoRv
-    bucketName: manchesteruc
