@@ -1,4 +1,4 @@
-package com.fyp.qian.mapservice;
+package com.fyp.qian.mapservice.controller;
 
 import com.fyp.qian.serviceclient.service.UserFeignClient;
 import jakarta.annotation.Resource;

@@ -1,4 +1,4 @@
-package com.fyp.qian.plan;
+package com.fyp.qian.planservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
