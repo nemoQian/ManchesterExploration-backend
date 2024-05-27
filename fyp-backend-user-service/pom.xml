@@ -25,5 +25,10 @@
             <artifactId>fyp-backend-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.fyp.qian</groupId>
+            <artifactId>fyp-backend-service-client</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

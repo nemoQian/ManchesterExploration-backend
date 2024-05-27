@@ -22,7 +22,7 @@ import java.util.List;
  * @author Yihan Qian
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/")
 public class UserController {
 
     @Resource

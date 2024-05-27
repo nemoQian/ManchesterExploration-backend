@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyp.qian.common.common.exception.BusinessException;
 import com.fyp.qian.model.enums.StateEnum;
-import com.fyp.qian.model.pojo.AvatarUpload;
 import com.fyp.qian.model.pojo.User;
 import com.fyp.qian.model.pojo.response.TagUserListResponse;
 import com.fyp.qian.userservice.mapper.UserMapper;
@@ -21,7 +20,6 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +31,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.fyp.qian.common.constant.UserConstant.*;
+import static com.fyp.qian.common.constant.AvatarConstant.*;
 
 /**
 * @author Yihan Qian
@@ -40,9 +39,6 @@ import static com.fyp.qian.common.constant.UserConstant.*;
 */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
-    @Autowired
-    private AvatarUpload token;
 
     @Override
     public long userRegister(String username, String userPassword, String checkPassword) {
@@ -211,8 +207,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String avatarUrl = "";
         Configuration cfg = new Configuration(Region.region1());
         UploadManager uploadManager = new UploadManager(cfg);
-        Auth auth = Auth.create(token.getAccessKey(), token.getSecretKey());
-        String upToken = auth.uploadToken(token.getBucketName());
+        Auth auth = Auth.create(accessKey, secretKey);
+        String upToken = auth.uploadToken(bucketName);
 
         try {
             Response response = uploadManager.put(avatarFile.getInputStream(), avatarFile.getOriginalFilename(), upToken, null, null);

@@ -6,6 +6,7 @@ import com.fyp.qian.model.pojo.response.TagUserListResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -97,5 +98,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     int updateUserTags(List<String> tags, HttpServletRequest request);
+
 }
 
