@@ -2,13 +2,16 @@ package com.fyp.qian.mapservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fyp.qian.common.common.exception.BusinessException;
 import com.fyp.qian.mapservice.pojo.Building;
 import com.fyp.qian.mapservice.pojo.BuildingResponse;
 import com.fyp.qian.mapservice.service.BuildingService;
 import com.fyp.qian.mapservice.mapper.BuildingMapper;
+import com.fyp.qian.model.enums.StateEnum;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKBReader;
+import io.micrometer.common.util.StringUtils;
 import org.locationtech.proj4j.CRSFactory;
 import org.locationtech.proj4j.CoordinateReferenceSystem;
 import org.locationtech.proj4j.Proj4jException;
@@ -29,8 +32,12 @@ public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building>
 
     @Override
     public List<BuildingResponse> findBuildingByName(String buildingName) {
+        if(StringUtils.isBlank(buildingName)){
+            throw new BusinessException(StateEnum.PARAMS_EMPTY_ERROR, "Please input search name.");
+        }
         QueryWrapper<Building> queryWrapper = new QueryWrapper<>();
-        queryWrapper.apply("LOWER(name) LIKE LOWER({0})", "%" + buildingName + "%");
+        String queryName = buildingName.replace('+', ' ');
+        queryWrapper.apply("LOWER(name) LIKE LOWER({0})", "%" + queryName + "%");
         List<Building> buildings = this.list(queryWrapper);
         List<BuildingResponse> buildingResponses = new ArrayList<>();
         for(Building building : buildings){
