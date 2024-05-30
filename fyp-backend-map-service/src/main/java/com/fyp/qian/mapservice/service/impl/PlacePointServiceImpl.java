@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyp.qian.common.common.exception.BusinessException;
 import com.fyp.qian.mapservice.pojo.Building;
-import com.fyp.qian.mapservice.pojo.BuildingResponse;
-import com.fyp.qian.mapservice.service.BuildingService;
-import com.fyp.qian.mapservice.mapper.BuildingMapper;
 import com.fyp.qian.model.enums.StateEnum;
+import com.fyp.qian.model.pojo.PlacePoint;
+import com.fyp.qian.mapservice.service.PlacePointService;
+import com.fyp.qian.mapservice.mapper.PlacePointMapper;
+import com.fyp.qian.model.pojo.response.PlaceResponse;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKBReader;
@@ -23,25 +24,23 @@ import java.util.List;
 
 /**
 * @author Yihan Qian
-* @description 针对表【building】的数据库操作Service实现
-* @createDate 2024-05-27 16:49:27
+* @description 针对表【place_point】的数据库操作Service实现
+* @createDate 2024-05-29 17:12:37
 */
 @Service
-public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building>
-    implements BuildingService{
-
+public class PlacePointServiceImpl extends ServiceImpl<PlacePointMapper, PlacePoint>
+    implements PlacePointService{
     @Override
-    public List<BuildingResponse> findBuildingByName(String buildingName) {
-        if(StringUtils.isBlank(buildingName)){
+    public List<PlaceResponse> findPlacePointByName(String placeName) {
+        if(StringUtils.isBlank(placeName)){
             throw new BusinessException(StateEnum.PARAMS_EMPTY_ERROR, "Please input search name.");
         }
-        QueryWrapper<Building> queryWrapper = new QueryWrapper<>();
-        String queryName = buildingName.replace('+', ' ');
-        queryWrapper.apply("LOWER(name) LIKE LOWER({0})", "%" + queryName + "%");
-        List<Building> buildings = this.list(queryWrapper);
-        List<BuildingResponse> buildingResponses = new ArrayList<>();
-        for(Building building : buildings){
-            String way = building.getWay().toString();
+        QueryWrapper<PlacePoint> queryWrapper = new QueryWrapper<>();
+        queryWrapper.apply("LOWER(name) LIKE LOWER({0})", "%" + placeName + "%");
+        List<PlacePoint> points = this.list(queryWrapper);
+        List<PlaceResponse> placeResponses = new ArrayList<>();
+        for(PlacePoint point : points){
+            String way = point.getWay().toString();
             byte[] wkbBytes = hexStringToByteArray(way);
 
             WKBReader wkbReader = new WKBReader();
@@ -51,15 +50,15 @@ public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building>
                 double latitude = geometry.getCentroid().getCoordinate().y;
                 double longitude = geometry.getCentroid().getCoordinate().x;
                 double[] axios = new double[]{longitude, latitude};
-                BuildingResponse buildingResponse = new BuildingResponse();
-                buildingResponse.setBuildingName(building.getName());
+                PlaceResponse buildingResponse = new PlaceResponse();
+                buildingResponse.setPlaceName(point.getName());
                 buildingResponse.setLnglat(tran(axios));
-                buildingResponses.add(buildingResponse);
+                placeResponses.add(buildingResponse);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
         }
-        return buildingResponses;
+        return placeResponses;
     }
 
     private static byte[] hexStringToByteArray(String hexString) {
@@ -97,6 +96,7 @@ public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building>
         }
         return new double[]{x, y};
     }
+
 }
 
 
