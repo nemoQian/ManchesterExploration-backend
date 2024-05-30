@@ -11,4 +11,6 @@ public class LocationSearchRequest implements Serializable {
     private static final long serialVersionUID = 3191241716373120793L;
 
     private String searchName;
+
+    private String searchTag;
 }

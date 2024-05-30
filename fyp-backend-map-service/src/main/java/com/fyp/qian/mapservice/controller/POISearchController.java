@@ -2,7 +2,7 @@ package com.fyp.qian.mapservice.controller;
 
 import com.fyp.qian.common.common.BaseResponse;
 import com.fyp.qian.common.common.ResponseResult;
-import com.fyp.qian.mapservice.service.PlacePointService;
+import com.fyp.qian.mapservice.service.POISearchService;
 import com.fyp.qian.model.pojo.response.PlaceResponse;
 import com.fyp.qian.model.pojo.request.LocationSearchRequest;
 import jakarta.annotation.Resource;
@@ -12,14 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/place")
-public class PlacePointController {
+public class POISearchController {
 
     @Resource
-    private PlacePointService placePointService;
+    private POISearchService poiSearchService;
 
     @PostMapping("/search")
     public BaseResponse<List<PlaceResponse>> search(@RequestBody LocationSearchRequest locationSearchRequest) {
-        List<PlaceResponse> result = placePointService.findPlacePointByName(locationSearchRequest.getSearchName());
+        List<PlaceResponse> result = poiSearchService.findPlaceByName(locationSearchRequest.getSearchName());
         return ResponseResult.success(result);
     }
 }

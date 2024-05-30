@@ -1,0 +1,33 @@
+server:
+  port: 8101
+spring:
+  application:
+    name: fyp-backend-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      discovery:
+        service: fyp-backend-gateway
+    gateway:
+      routes:
+        - id: fyp-backend-user-service
+          uri: lb://fyp-backend-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: fyp-backend-map-service
+          uri: lb://fyp-backend-map-service
+          predicates:
+            - Path=/api/map/**
+        - id: fyp-backend-plan-service
+          uri: lb://fyp-backend-plan-service
+          predicates:
+            - Path=/api/plan/**
+knife4j:
+  gateway:
+    enabled: true
+    strategy: discover
+    discover:
+      enabled: true
+      version: openapi3

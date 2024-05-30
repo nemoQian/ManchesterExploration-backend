@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fyp.qian.mapservice.mapper.PlaceAreaMapper">
+
+    <resultMap id="BaseResultMap" type="com.fyp.qian.model.pojo.PlaceArea">
+            <result property="osmId" column="osm_id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="amenity" column="amenity" jdbcType="VARCHAR"/>
+            <result property="tags" column="tags" jdbcType="OTHER"/>
+            <result property="wayArea" column="way_area" jdbcType="REAL"/>
+            <result property="way" column="way" jdbcType="OTHER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        osm_id,name,amenity,
+        tags,way_area,way
+    </sql>
+</mapper>

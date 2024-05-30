@@ -27,7 +27,6 @@ spring:
       discovery:
         service: fyp-backend-user-service
 
-
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -37,3 +36,17 @@ mybatis-plus:
       logic-delete-field: delete_state
       logic-delete-value: 1
       logic-not-delete-value: 0
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.fyp.qian.userservice.controller
+knife4j:
+  enable: true

@@ -1,0 +1,38 @@
+server:
+  port: 8103
+  servlet:
+    context-path: /api/map
+spring:
+  application:
+    name: fyp-backend-map-service
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/manchestermap?useSSL=false&serverTimezone=GMT
+    username: postgres
+    password: postgres
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      discovery:
+        service: fyp-backend-map-service
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.fyp.qian.mapservice.controller
+
+knife4j:
+  enable: true

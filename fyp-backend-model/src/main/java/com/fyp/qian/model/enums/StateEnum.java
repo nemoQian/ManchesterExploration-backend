@@ -26,6 +26,8 @@ public enum StateEnum {
     DUPLICATE_NICKNAME_ERROR(40301, "Nickname duplicated"),
     DUPLICATE_TAG_ERROR(40302, "Tag name duplicated"),
 
+    NO_PLACE_FOUND_ERROR(40400, "Cannot find any place"),
+
     SYSTEM_ERROR(50000, "Something wrong in the system"),
     ;
 

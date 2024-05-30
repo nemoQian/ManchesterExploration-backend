@@ -8,11 +8,11 @@ import lombok.Data;
 
 /**
  * 
- * @TableName place_point
+ * @TableName place_area
  */
-@TableName(value ="place_point")
+@TableName(value ="place_area")
 @Data
-public class PlacePoint implements Serializable {
+public class PlaceArea implements Serializable {
     /**
      * 
      */
@@ -37,6 +37,11 @@ public class PlacePoint implements Serializable {
     /**
      * 
      */
+    private Float wayArea;
+
+    /**
+     * 
+     */
     private Object way;
 
     @TableField(exist = false)
@@ -53,11 +58,12 @@ public class PlacePoint implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        PlacePoint other = (PlacePoint) that;
+        PlaceArea other = (PlaceArea) that;
         return (this.getOsmId() == null ? other.getOsmId() == null : this.getOsmId().equals(other.getOsmId()))
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getAmenity() == null ? other.getAmenity() == null : this.getAmenity().equals(other.getAmenity()))
             && (this.getTags() == null ? other.getTags() == null : this.getTags().equals(other.getTags()))
+            && (this.getWayArea() == null ? other.getWayArea() == null : this.getWayArea().equals(other.getWayArea()))
             && (this.getWay() == null ? other.getWay() == null : this.getWay().equals(other.getWay()));
     }
 
@@ -69,6 +75,7 @@ public class PlacePoint implements Serializable {
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getAmenity() == null) ? 0 : getAmenity().hashCode());
         result = prime * result + ((getTags() == null) ? 0 : getTags().hashCode());
+        result = prime * result + ((getWayArea() == null) ? 0 : getWayArea().hashCode());
         result = prime * result + ((getWay() == null) ? 0 : getWay().hashCode());
         return result;
     }
@@ -83,6 +90,7 @@ public class PlacePoint implements Serializable {
         sb.append(", name=").append(name);
         sb.append(", amenity=").append(amenity);
         sb.append(", tags=").append(tags);
+        sb.append(", wayArea=").append(wayArea);
         sb.append(", way=").append(way);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
