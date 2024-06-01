@@ -1,11 +1,10 @@
 package com.fyp.qian.mapservice.service.impl;
 
 import com.fyp.qian.mapservice.service.PlaceAreaService;
+import com.fyp.qian.model.pojo.request.LocationSearchRequest;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PlaceAreaServiceImplTest {
@@ -15,6 +14,11 @@ class PlaceAreaServiceImplTest {
 
     @Test
     void findPlacePointByName() {
-        System.out.println(placeAreaService.findPlaceAreaByName("university"));
+        System.out.println(placeAreaService.findPlaceArea(new LocationSearchRequest()));
+    }
+
+    @Test
+    void findPlaceAreaCategories() {
+        System.out.println(placeAreaService.findPlaceAreaCategories());
     }
 }

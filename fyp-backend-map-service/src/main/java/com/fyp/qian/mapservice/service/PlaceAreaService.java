@@ -2,6 +2,8 @@ package com.fyp.qian.mapservice.service;
 
 import com.fyp.qian.model.pojo.PlaceArea;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fyp.qian.model.pojo.SelectTree;
+import com.fyp.qian.model.pojo.request.LocationSearchRequest;
 import com.fyp.qian.model.pojo.response.PlaceResponse;
 
 import java.util.List;
@@ -15,10 +17,14 @@ public interface PlaceAreaService extends IService<PlaceArea> {
 
     /**
      *
-     * @param placeName
+     * @param locationSearchRequest
      * @return
      */
-    List<PlaceResponse> findPlaceAreaByName(String placeName);
+    List<PlaceResponse> findPlaceArea(LocationSearchRequest locationSearchRequest);
 
-
+    /**
+     *
+     * @return
+     */
+    List<SelectTree> findPlaceAreaCategories();
 }

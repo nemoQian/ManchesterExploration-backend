@@ -7,6 +7,8 @@ import com.fyp.qian.model.enums.StateEnum;
 import com.fyp.qian.model.pojo.PlacePoint;
 import com.fyp.qian.mapservice.service.PlacePointService;
 import com.fyp.qian.mapservice.mapper.PlacePointMapper;
+import com.fyp.qian.model.pojo.SelectTree;
+import com.fyp.qian.model.pojo.request.LocationSearchRequest;
 import com.fyp.qian.model.pojo.response.PlaceResponse;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
@@ -26,23 +28,45 @@ public class PlacePointServiceImpl extends ServiceImpl<PlacePointMapper, PlacePo
     implements PlacePointService{
 
     @Override
-    public List<PlaceResponse> findPlacePointByName(String placeName) {
-        if(StringUtils.isBlank(placeName)){
-            throw new BusinessException(StateEnum.PARAMS_EMPTY_ERROR, "Please input search name.");
-        }
+    public List<PlaceResponse> findPlacePoint(LocationSearchRequest locationSearchRequest) {
+        String placeName = locationSearchRequest.getSearchName();
+        String placeCategories = locationSearchRequest.getSearchCategories();
+        String placeTag = locationSearchRequest.getSearchTag();
         QueryWrapper<PlacePoint> queryWrapper = new QueryWrapper<>();
-        queryWrapper.apply("LOWER(name) LIKE LOWER({0})", "%" + placeName + "%");
+
+        if(StringUtils.isNotBlank(placeName)){
+            queryWrapper.apply("LOWER(name) LIKE LOWER({0})", "%" + placeName + "%");
+        }
+
+        if(StringUtils.isNotBlank(placeCategories)){
+            queryWrapper.eq("amenity", placeCategories);
+        }
+
         List<PlacePoint> points = this.list(queryWrapper);
         List<PlaceResponse> placeResponses = new ArrayList<>();
 
         for(PlacePoint point : points){
             String way = point.getWay().toString();
-            PlaceResponse buildingResponse = new PlaceResponse();
-            buildingResponse.setPlaceName(point.getName());
-            buildingResponse.setLnglat(generateLatLon(way));
-            placeResponses.add(buildingResponse);
+            PlaceResponse pointResponse = new PlaceResponse();
+            pointResponse.setPlaceName(StringUtils.isBlank(point.getName()) ? placeCategories : point.getName());
+            pointResponse.setLnglat(generateLatLon(way));
+            pointResponse.setDescription(point.getTags());
+            placeResponses.add(pointResponse);
         }
         return placeResponses;
+    }
+
+    @Override
+    public List<SelectTree> findPlacePointCategories() {
+        List<String> amenities = this.baseMapper.selectDistinctAmenity();
+        List<SelectTree> selectTrees = new ArrayList<>();
+        for(String amenity : amenities){
+            SelectTree selectTree = new SelectTree();
+            selectTree.setLabel(amenity);
+            selectTree.setValue(amenity);
+            selectTrees.add(selectTree);
+        }
+        return selectTrees;
     }
 }
 

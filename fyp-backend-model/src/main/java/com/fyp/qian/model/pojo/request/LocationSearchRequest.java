@@ -12,5 +12,7 @@ public class LocationSearchRequest implements Serializable {
 
     private String searchName;
 
+    private String searchCategories;
+
     private String searchTag;
 }

@@ -2,6 +2,9 @@ package com.fyp.qian.mapservice.mapper;
 
 import com.fyp.qian.model.pojo.PlacePoint;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
 * @author Yihan Qian
@@ -11,6 +14,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface PlacePointMapper extends BaseMapper<PlacePoint> {
 
+    @Select("SELECT DISTINCT amenity FROM place_point ORDER BY amenity")
+    List<String> selectDistinctAmenity();
 }
 
 

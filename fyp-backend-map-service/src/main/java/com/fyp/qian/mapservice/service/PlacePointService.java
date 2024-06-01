@@ -1,5 +1,7 @@
 package com.fyp.qian.mapservice.service;
 
+import com.fyp.qian.model.pojo.SelectTree;
+import com.fyp.qian.model.pojo.request.LocationSearchRequest;
 import com.fyp.qian.model.pojo.response.PlaceResponse;
 import com.fyp.qian.model.pojo.PlacePoint;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -15,9 +17,14 @@ public interface PlacePointService extends IService<PlacePoint> {
 
     /**
      *
-     * @param placeName
+     * @param locationSearchRequest
      * @return
      */
-    List<PlaceResponse> findPlacePointByName(String placeName);
+    List<PlaceResponse> findPlacePoint(LocationSearchRequest locationSearchRequest);
 
+    /**
+     *
+     * @return
+     */
+    List<SelectTree> findPlacePointCategories();
 }

@@ -8,4 +8,6 @@ public class PlaceResponse {
     private String placeName;
 
     private double[] lnglat;
+
+    private Object description;
 }

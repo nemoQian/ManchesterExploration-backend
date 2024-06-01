@@ -1,6 +1,8 @@
 package com.fyp.qian.common.utils;
 
 import com.fyp.qian.model.pojo.response.PlaceResponse;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKBReader;
@@ -8,6 +10,8 @@ import org.locationtech.proj4j.CRSFactory;
 import org.locationtech.proj4j.CoordinateReferenceSystem;
 import org.locationtech.proj4j.Proj4jException;
 import org.locationtech.proj4j.ProjCoordinate;
+
+import java.util.Set;
 
 public class OSMDataUtil {
 
@@ -25,6 +29,10 @@ public class OSMDataUtil {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String generateDescription(Object tags){
+        return "";
     }
 
     private static byte[] hexStringToByteArray(String hexString) {
