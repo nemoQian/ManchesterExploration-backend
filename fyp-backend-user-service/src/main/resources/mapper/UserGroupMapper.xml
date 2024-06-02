@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fyp.qian.userservice.mapper.UserGroupMapper">
+
+    <resultMap id="BaseResultMap" type="com.fyp.qian.model.pojo.UserGroup">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="groupName" column="group_name" jdbcType="VARCHAR"/>
+            <result property="groupDescription" column="group_description" jdbcType="VARCHAR"/>
+            <result property="groupCreateUserId" column="group_create_user_id" jdbcType="BIGINT"/>
+            <result property="groupVisibility" column="group_visibility" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleteState" column="delete_state" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,group_name,group_description,
+        group_create_user_id,group_visibility,create_time,
+        update_time,delete_state
+    </sql>
+</mapper>

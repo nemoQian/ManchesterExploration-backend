@@ -7,13 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class TagUserListRequest implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 3191241716373120793L;
+public class TagUserListRequest extends PageRequest{
 
     private int current;
-
-    private int pageSize;
 
     private List<String> tags;
 

@@ -1,0 +1,18 @@
+package com.fyp.qian.userservice.mapper;
+
+import com.fyp.qian.model.pojo.UserGroup;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+/**
+* @author Yihan Qian
+* @description 针对表【user_group(group table)】的数据库操作Mapper
+* @createDate 2024-06-02 15:13:11
+* @Entity com.fyp.qian.model.pojo.UserGroup
+*/
+public interface UserGroupMapper extends BaseMapper<UserGroup> {
+
+}
+
+
+
+

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyp.qian.common.common.exception.BusinessException;
 import com.fyp.qian.model.enums.StateEnum;
 import com.fyp.qian.model.pojo.User;
+import com.fyp.qian.model.pojo.request.TagUserListRequest;
 import com.fyp.qian.model.pojo.response.TagUserListResponse;
 import com.fyp.qian.userservice.mapper.UserMapper;
 import com.fyp.qian.common.utils.EncryptUtil;
@@ -131,7 +132,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<TagUserListResponse> searchUsersByTags(List<String> tags, boolean strict) {
+    public List<TagUserListResponse> searchUsersByTags(TagUserListRequest tagUserListRequest, boolean strict) {
+        List<String> tags = tagUserListRequest.getTags();
         if (tags == null || tags.isEmpty()) {
             return null;
         }
@@ -167,10 +169,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!StringUtils.isBlank(email)) {
             inputValidation(email, EMAIL_LENGTH, EMAIL_TYPE);
         }
+        else {
+            email = "";
+        }
+        currentUser.setEmail(email);
+
         if (!StringUtils.isBlank(phone)) {
             inputValidation(phone, PHONE_LENGTH, PHONE_TYPE);
         }
-        currentUser.setEmail(email);
+        else {
+            phone = "";
+        }
         currentUser.setPhone(phone);
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -183,10 +192,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         currentUser.setNickname(nickname);
 
-        if(!gender.equals("Male") && !gender.equals("Female")){
+        if(!gender.equals("Male") && !gender.equals("Female") && StringUtils.isNotBlank(gender)){
             throw new BusinessException(StateEnum.GENDER_INVALID_ERROR) ;
-        }
-        currentUser.setGender(gender.equals("Male") ? 1 : 0);
+        } else if (StringUtils.isBlank(gender)) {
+            currentUser.setGender(-1);
+        } else currentUser.setGender(gender.equals("Male") ? 1 : 0);
 
         this.updateById(currentUser);
 

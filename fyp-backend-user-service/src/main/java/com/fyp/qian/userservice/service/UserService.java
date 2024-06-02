@@ -2,6 +2,7 @@ package com.fyp.qian.userservice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyp.qian.model.pojo.User;
+import com.fyp.qian.model.pojo.request.TagUserListRequest;
 import com.fyp.qian.model.pojo.response.TagUserListResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,11 +66,12 @@ public interface UserService extends IService<User> {
     int userLogout(HttpServletRequest request);
 
     /**
-     * @param tags
+     *
+     * @param tagUserListRequest
      * @param strict
      * @return
      */
-    List<TagUserListResponse> searchUsersByTags(List<String> tags, boolean strict);
+    List<TagUserListResponse> searchUsersByTags(TagUserListRequest tagUserListRequest, boolean strict);
 
     /**
      *

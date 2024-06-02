@@ -108,7 +108,7 @@ public class UserController {
 
     @GetMapping("/tagUserList")
     public BaseResponse<List<TagUserListResponse>> getTagUserList(TagUserListRequest tagUserListRequest) {
-        List<TagUserListResponse> result = userService.searchUsersByTags(tagUserListRequest.getTags(), true);
+        List<TagUserListResponse> result = userService.searchUsersByTags(tagUserListRequest, true);
         return ResponseResult.success(result);
     }
 }
