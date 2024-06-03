@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyp.qian.model.pojo.request.GroupSearchRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 /**
 * @author Yihan Qian
 * @description 针对表【user_group(group table)】的数据库操作Service
@@ -24,7 +26,24 @@ public interface UserGroupService extends IService<UserGroup> {
     /**
      *
      * @param groupSearchRequest
+     * @param request
      * @return
      */
-    Page<UserGroup> listGroup(GroupSearchRequest groupSearchRequest);
+    Page<UserGroup> listUserGroup(GroupSearchRequest groupSearchRequest, HttpServletRequest request);
+
+    /**
+     *
+     * @param groupSearchRequest
+     * @param request
+     * @return
+     */
+    Page<UserGroup> searchGroup(GroupSearchRequest groupSearchRequest, HttpServletRequest request);
+
+    /**
+     *
+     * @param groupSearchRequest
+     * @param request
+     * @return
+     */
+    Long joinGroup(GroupSearchRequest groupSearchRequest, HttpServletRequest request);
 }

@@ -9,8 +9,6 @@ import java.util.List;
 @Data
 public class TagUserListRequest extends PageRequest{
 
-    private int current;
-
     private List<String> tags;
 
     private boolean strict;

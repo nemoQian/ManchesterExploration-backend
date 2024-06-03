@@ -26,6 +26,7 @@ public enum StateEnum {
     DUPLICATE_NICKNAME_ERROR(40301, "Nickname duplicated"),
     DUPLICATE_TAG_ERROR(40302, "Tag name duplicated"),
     DUPLICATE_GROUP_ERROR(40303, "Group name duplicated"),
+    DUPLICATE_GROUP_JOIN_ERROR(40304, "Cannot join the same group again"),
 
     NO_PLACE_FOUND_ERROR(40400, "Cannot find any place"),
 

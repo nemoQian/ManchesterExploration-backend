@@ -9,10 +9,9 @@ import com.fyp.qian.userservice.service.UserGroupService;
 import com.fyp.qian.userservice.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/group")
@@ -30,8 +29,18 @@ public class GroupController {
         return ResponseResult.success(result);
     }
 
-    @PostMapping("/list")
-    public BaseResponse<Page<UserGroup>> listGroup(@RequestBody GroupSearchRequest groupSearchRequest) {
-        return ResponseResult.success(userGroupService.listGroup(groupSearchRequest));
+    @PostMapping("/groupList")
+    public BaseResponse<Page<UserGroup>> listGroup(@RequestBody GroupSearchRequest groupSearchRequest, HttpServletRequest request) {
+        return ResponseResult.success(userGroupService.listUserGroup(groupSearchRequest, request));
+    }
+
+    @GetMapping("/searchGroupList")
+    public BaseResponse<Page<UserGroup>> searchGroupList(GroupSearchRequest groupSearchRequest, HttpServletRequest request) {
+        return ResponseResult.success(userGroupService.searchGroup(groupSearchRequest, request));
+    }
+
+    @PostMapping("/join")
+    public BaseResponse<Long> join(@RequestBody GroupSearchRequest groupSearchRequest, HttpServletRequest request) {
+        return ResponseResult.success(userGroupService.joinGroup(groupSearchRequest, request));
     }
 }

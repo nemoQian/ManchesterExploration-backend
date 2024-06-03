@@ -13,5 +13,5 @@ public class PageRequest implements Serializable {
 
     protected int pageSize;
 
-    protected int pageNum;
+    protected int current;
 }
