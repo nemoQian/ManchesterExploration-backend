@@ -9,5 +9,4 @@ public class PlaceTagDescription implements Serializable {
 
     private String website;
 
-
 }

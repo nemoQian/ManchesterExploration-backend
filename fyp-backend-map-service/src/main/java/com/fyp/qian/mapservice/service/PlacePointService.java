@@ -27,4 +27,6 @@ public interface PlacePointService extends IService<PlacePoint> {
      * @return
      */
     List<SelectTree> findPlacePointCategories();
+
+    List<PlacePoint> selectPointByTagKey(String key);
 }

@@ -10,11 +10,15 @@ import com.fyp.qian.mapservice.mapper.PlacePointMapper;
 import com.fyp.qian.model.pojo.SelectTree;
 import com.fyp.qian.model.pojo.request.LocationSearchRequest;
 import com.fyp.qian.model.pojo.response.PlaceResponse;
+import com.fyp.qian.serviceclient.service.UserFeignClient;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.micrometer.common.util.StringUtils;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.fyp.qian.common.utils.OSMDataUtil.*;
 
@@ -26,6 +30,9 @@ import static com.fyp.qian.common.utils.OSMDataUtil.*;
 @Service
 public class PlacePointServiceImpl extends ServiceImpl<PlacePointMapper, PlacePoint>
     implements PlacePointService{
+
+    @Resource
+    private UserFeignClient userFeignClient;
 
     @Override
     public List<PlaceResponse> findPlacePoint(LocationSearchRequest locationSearchRequest) {
@@ -40,6 +47,11 @@ public class PlacePointServiceImpl extends ServiceImpl<PlacePointMapper, PlacePo
 
         if(StringUtils.isNotBlank(placeCategories)){
             queryWrapper.eq("amenity", placeCategories);
+        }
+
+        if(StringUtils.isNotBlank(placeTag)){
+            List<Long> osmIds = userFeignClient.listPlaceTagIds(placeTag);
+            queryWrapper.in("osm_id", osmIds);
         }
 
         List<PlacePoint> points = this.list(queryWrapper);
@@ -67,6 +79,27 @@ public class PlacePointServiceImpl extends ServiceImpl<PlacePointMapper, PlacePo
             selectTrees.add(selectTree);
         }
         return selectTrees;
+    }
+
+    @Override
+    public List<PlacePoint> selectPointByTagKey(String key) {
+        List<PlacePoint> points = this.baseMapper.selectAllWithJsonTags();
+
+        Gson gson = new Gson();
+        return points.stream().filter(placePoint -> {
+            String tags = placePoint.getTags().toString();
+            if (StringUtils.isBlank(tags)) {
+                return false;
+            }
+            Map<String, String> map = gson.fromJson(tags, Map.class);
+            if (!map.containsKey(key)) {
+                return false;
+            }
+            Map<String, String> tagMap = new HashMap<>();
+            tagMap.put(key, map.get(key));
+            placePoint.setTags(tagMap);
+            return true;
+        }).collect(Collectors.toList());
     }
 }
 

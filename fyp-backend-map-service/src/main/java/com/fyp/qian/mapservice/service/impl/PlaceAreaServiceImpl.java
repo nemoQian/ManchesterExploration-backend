@@ -10,7 +10,9 @@ import com.fyp.qian.mapservice.mapper.PlaceAreaMapper;
 import com.fyp.qian.model.pojo.SelectTree;
 import com.fyp.qian.model.pojo.request.LocationSearchRequest;
 import com.fyp.qian.model.pojo.response.PlaceResponse;
+import com.fyp.qian.serviceclient.service.UserFeignClient;
 import io.micrometer.common.util.StringUtils;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ import static com.fyp.qian.common.utils.OSMDataUtil.generateLatLon;
 public class PlaceAreaServiceImpl extends ServiceImpl<PlaceAreaMapper, PlaceArea>
     implements PlaceAreaService{
 
+    @Resource
+    private UserFeignClient userFeignClient;
+
     @Override
     public List<PlaceResponse> findPlaceArea(LocationSearchRequest locationSearchRequest) {
         String placeName = locationSearchRequest.getSearchName();
@@ -40,6 +45,11 @@ public class PlaceAreaServiceImpl extends ServiceImpl<PlaceAreaMapper, PlaceArea
 
         if(StringUtils.isNotBlank(placeCategories)){
             queryWrapper.eq("amenity", placeCategories);
+        }
+
+        if(StringUtils.isNotBlank(placeTag)){
+            List<Long> osmIds = userFeignClient.listPlaceTagIds(placeTag);
+            queryWrapper.in("osm_id", osmIds);
         }
 
         List<PlaceArea> areas = this.list(queryWrapper);

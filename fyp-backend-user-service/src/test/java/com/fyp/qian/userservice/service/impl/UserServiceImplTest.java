@@ -1,6 +1,7 @@
-package com.fyp.qian.userservice.service;
+package com.fyp.qian.userservice.service.impl;
 
 import com.fyp.qian.common.common.exception.BusinessException;
+import com.fyp.qian.userservice.service.UserService;
 import jakarta.annotation.Resource;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
