@@ -30,6 +30,8 @@ public enum StateEnum {
 
     NO_PLACE_FOUND_ERROR(40400, "Cannot find any place"),
 
+    NO_LOGIN_ERROR(40999, "Please login first"),
+
     SYSTEM_ERROR(50000, "Something wrong in the system"),
     ;
 

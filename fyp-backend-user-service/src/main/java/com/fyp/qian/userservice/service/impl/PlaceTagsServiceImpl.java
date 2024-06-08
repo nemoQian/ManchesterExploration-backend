@@ -7,6 +7,8 @@ import com.fyp.qian.model.enums.StateEnum;
 import com.fyp.qian.model.pojo.PlaceTags;
 import com.fyp.qian.model.pojo.Tags;
 import com.fyp.qian.model.pojo.TagsTree;
+import com.fyp.qian.model.pojo.User;
+import com.fyp.qian.model.pojo.request.TagWaitingListRequest;
 import com.fyp.qian.userservice.service.PlaceTagsService;
 import com.fyp.qian.userservice.mapper.PlaceTagsMapper;
 import com.google.gson.Gson;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.fyp.qian.common.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
 * @author Yihan Qian
@@ -52,13 +56,12 @@ public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags
         placeTagsQueryWrapper.eq("tag_belongs", placeTags.getTagBelongs());
         long count = this.count(placeTagsQueryWrapper);
         if (count > 0) {
-            return null;
-//            throw new BusinessException(StateEnum.DUPLICATE_TAG_ERROR);
+            throw new BusinessException(StateEnum.DUPLICATE_TAG_ERROR);
         }
 
-//        if (placeTags.getTagShownStatus() == 0) {
-//            placeTags.setApprovalState(1);
-//        }
+        if (placeTags.getTagShownStatus() == 0) {
+            placeTags.setApprovalState(1);
+        }
         this.save(placeTags);
         return null;
     }
@@ -78,6 +81,16 @@ public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags
             osmIds.add(placeTags.getOsmId());
         }
         return osmIds;
+    }
+
+    @Override
+    public Long InsertPlaceTagWaitingList(TagWaitingListRequest tagWaitingListRequest, HttpServletRequest request) {
+        User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (currentUser == null || currentUser.getDeleteState() == 1) {
+            throw new BusinessException(StateEnum.NO_LOGIN_ERROR);
+        }
+        System.out.println(tagWaitingListRequest.toString());
+        return 0L;
     }
 
     private String generateGlobalPlaceTags(){

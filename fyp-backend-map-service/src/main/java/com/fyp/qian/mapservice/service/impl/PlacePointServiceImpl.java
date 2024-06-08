@@ -60,6 +60,7 @@ public class PlacePointServiceImpl extends ServiceImpl<PlacePointMapper, PlacePo
         for(PlacePoint point : points){
             String way = point.getWay().toString();
             PlaceResponse pointResponse = new PlaceResponse();
+            pointResponse.setOsmId(point.getOsmId());
             pointResponse.setPlaceName(StringUtils.isBlank(point.getName()) ? placeCategories : point.getName());
             pointResponse.setLnglat(generateLatLon(way));
             pointResponse.setDescription(point.getTags());

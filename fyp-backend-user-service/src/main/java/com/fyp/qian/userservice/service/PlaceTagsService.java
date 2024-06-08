@@ -3,6 +3,7 @@ package com.fyp.qian.userservice.service;
 import com.fyp.qian.model.pojo.PlaceTags;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyp.qian.model.pojo.TagsTree;
+import com.fyp.qian.model.pojo.request.TagWaitingListRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
@@ -35,4 +36,12 @@ public interface PlaceTagsService extends IService<PlaceTags> {
      * @return
      */
     List<Long> searchPlaceByTag (String tagName);
+
+    /**
+     *
+     * @param tagWaitingListRequest
+     * @param request
+     * @return
+     */
+    Long InsertPlaceTagWaitingList(TagWaitingListRequest tagWaitingListRequest, HttpServletRequest request);
 }

@@ -58,6 +58,7 @@ public class PlaceAreaServiceImpl extends ServiceImpl<PlaceAreaMapper, PlaceArea
         for(PlaceArea area : areas){
             String way = area.getWay().toString();
             PlaceResponse buildingResponse = new PlaceResponse();
+            buildingResponse.setOsmId(area.getOsmId());
             buildingResponse.setPlaceName(StringUtils.isBlank(area.getName()) ? placeCategories : area.getName());
             buildingResponse.setLnglat(generateLatLon(way));
             buildingResponse.setDescription(area.getTags());
