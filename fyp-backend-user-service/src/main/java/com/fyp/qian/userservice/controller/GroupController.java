@@ -3,6 +3,7 @@ package com.fyp.qian.userservice.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fyp.qian.common.common.BaseResponse;
 import com.fyp.qian.common.common.ResponseResult;
+import com.fyp.qian.model.pojo.SelectTree;
 import com.fyp.qian.model.pojo.UserGroup;
 import com.fyp.qian.model.pojo.request.GroupSearchRequest;
 import com.fyp.qian.userservice.service.UserGroupService;
@@ -42,5 +43,10 @@ public class GroupController {
     @PostMapping("/join")
     public BaseResponse<Long> join(@RequestBody GroupSearchRequest groupSearchRequest, HttpServletRequest request) {
         return ResponseResult.success(userGroupService.joinGroup(groupSearchRequest, request));
+    }
+
+    @GetMapping("/getGroupOptionList")
+    public BaseResponse<List<SelectTree>> getGroupOptionList(HttpServletRequest request) {
+        return ResponseResult.success(userGroupService.getGroupOptionList(request));
     }
 }

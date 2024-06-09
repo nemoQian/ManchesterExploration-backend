@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class PlaceTagDescription implements Serializable {
+public class PlaceTagDescriptionResponse implements Serializable {
 
     private String website;
 

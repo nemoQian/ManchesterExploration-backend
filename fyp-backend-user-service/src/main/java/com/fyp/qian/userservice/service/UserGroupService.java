@@ -1,6 +1,7 @@
 package com.fyp.qian.userservice.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fyp.qian.model.pojo.SelectTree;
 import com.fyp.qian.model.pojo.UserGroup;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyp.qian.model.pojo.request.GroupSearchRequest;
@@ -46,4 +47,10 @@ public interface UserGroupService extends IService<UserGroup> {
      * @return
      */
     Long joinGroup(GroupSearchRequest groupSearchRequest, HttpServletRequest request);
+
+    /**
+     *
+     * @return
+     */
+    List<SelectTree> getGroupOptionList(HttpServletRequest request);
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fyp.qian.userservice.mapper.PlaceTagsWaitingMapper">
+
+    <resultMap id="BaseResultMap" type="com.fyp.qian.model.pojo.PlaceTagsWaiting">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="osmId" column="osm_id" jdbcType="BIGINT"/>
+            <result property="osmName" column="osm_name" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleteState" column="delete_state" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,osm_id,
+        osm_name,create_time,update_time,
+        delete_state
+    </sql>
+</mapper>

@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyp.qian.common.common.exception.BusinessException;
 import com.fyp.qian.model.enums.StateEnum;
-import com.fyp.qian.model.pojo.PlaceTags;
-import com.fyp.qian.model.pojo.Tags;
-import com.fyp.qian.model.pojo.TagsTree;
-import com.fyp.qian.model.pojo.User;
+import com.fyp.qian.model.pojo.*;
+import com.fyp.qian.model.pojo.request.PlaceTagOptionRequest;
 import com.fyp.qian.model.pojo.request.TagWaitingListRequest;
 import com.fyp.qian.userservice.service.PlaceTagsService;
 import com.fyp.qian.userservice.mapper.PlaceTagsMapper;
@@ -84,13 +82,41 @@ public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags
     }
 
     @Override
-    public Long InsertPlaceTagWaitingList(TagWaitingListRequest tagWaitingListRequest, HttpServletRequest request) {
+    public List<SelectTree> queryPlaceTagOption(PlaceTagOptionRequest placeTagOptionRequest, HttpServletRequest request) {
+        if(placeTagOptionRequest==null){
+            throw new BusinessException(StateEnum.PARAMS_EMPTY_ERROR);
+        }
         User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
         if (currentUser == null || currentUser.getDeleteState() == 1) {
             throw new BusinessException(StateEnum.NO_LOGIN_ERROR);
         }
-        System.out.println(tagWaitingListRequest.toString());
-        return 0L;
+
+        QueryWrapper<PlaceTags> placeTagsQueryWrapper = new QueryWrapper<>();
+        placeTagsQueryWrapper.eq("tag_parent_id", -1);
+
+        if (placeTagOptionRequest.getTagShownState() == 0) {
+            placeTagsQueryWrapper.eq("approval_state", 0);
+        }
+
+        if(placeTagOptionRequest.getTagShownState() == 1){
+            placeTagsQueryWrapper.eq("tag_shown_status", 1);
+            placeTagsQueryWrapper.eq("tag_belongs", placeTagOptionRequest.getTagBelongs());
+        }
+
+        if(placeTagOptionRequest.getTagShownState() == 2){
+            placeTagsQueryWrapper.eq("tag_shown_status", 2);
+            placeTagsQueryWrapper.eq("tag_belongs", currentUser.getId());
+        }
+
+        List<PlaceTags> placeTagsList = this.list(placeTagsQueryWrapper);
+        List<SelectTree> selectTrees = new ArrayList<>();
+        for (PlaceTags placeTags : placeTagsList) {
+            SelectTree selectTree = new SelectTree();
+            selectTree.setLabel(placeTags.getTagName());
+            selectTree.setValue(placeTags.getId().toString());
+            selectTrees.add(selectTree);
+        }
+        return selectTrees;
     }
 
     private String generateGlobalPlaceTags(){

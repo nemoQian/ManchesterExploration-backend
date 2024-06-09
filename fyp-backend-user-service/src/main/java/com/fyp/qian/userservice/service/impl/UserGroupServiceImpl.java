@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyp.qian.common.common.exception.BusinessException;
 import com.fyp.qian.model.enums.StateEnum;
+import com.fyp.qian.model.pojo.SelectTree;
 import com.fyp.qian.model.pojo.User;
 import com.fyp.qian.model.pojo.UserGroup;
 import com.fyp.qian.model.pojo.UserGroupRelation;
@@ -157,6 +158,26 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
             throw new BusinessException(StateEnum.DUPLICATE_GROUP_ERROR);
         }
         return userGroupRelation.getId();
+    }
+
+    @Override
+    public List<SelectTree> getGroupOptionList(HttpServletRequest request) {
+        User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (currentUser == null || currentUser.getDeleteState() == 1) {
+            throw new BusinessException(StateEnum.NO_LOGIN_ERROR);
+        }
+        List<Long> groupIds = getGroupIdList(currentUser.getId());
+        QueryWrapper<UserGroup> userGroupQueryWrapper = new QueryWrapper<>();
+        userGroupQueryWrapper.in("id", groupIds);
+        List<UserGroup> groupList = this.list(userGroupQueryWrapper);
+        List<SelectTree> selectTrees = new ArrayList<>();
+        for (UserGroup userGroup : groupList) {
+            SelectTree selectTree = new SelectTree();
+            selectTree.setValue(userGroup.getId().toString());
+            selectTree.setLabel(userGroup.getGroupName());
+            selectTrees.add(selectTree);
+        }
+        return selectTrees;
     }
 
     private List<Long> getGroupIdList(Long userId) {
