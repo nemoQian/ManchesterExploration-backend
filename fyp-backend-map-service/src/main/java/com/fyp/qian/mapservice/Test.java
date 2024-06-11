@@ -14,13 +14,13 @@ public class Test {
     @Resource
     private UserFeignClient userFeignClient;
 
-    @GetMapping("/in")
-    public void in() {
-        PlaceTags placeTags = new PlaceTags();
-        placeTags.setOsmId(0L);
-        placeTags.setTagName("wheelchair");
-        placeTags.setTagShownStatus(0);
-        placeTags.setTagBelongs(-1L);
-        userFeignClient.insertPointTag(placeTags);
-    }
+//    @GetMapping("/in")
+//    public void in() {
+//        PlaceTags placeTags = new PlaceTags();
+//        placeTags.setOsmId(0L);
+//        placeTags.setTagName("wheelchair");
+//        placeTags.setTagShownStatus(0);
+//        placeTags.setTagBelongs(-1L);
+//        userFeignClient.insertPointTag(placeTags);
+//    }
 }

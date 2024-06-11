@@ -28,8 +28,8 @@ public interface UserFeignClient {
     @GetMapping("/get/ids")
     List<User> listUserByIds(@RequestParam("ids") Collection<Long> ids);
 
-    @PostMapping("/insertPointTags")
-    void insertPointTag(@RequestBody PlaceTags placeTags);
+//    @PostMapping("/insertPointTags")
+//    void insertPointTag(@RequestBody PlaceTags placeTags);
 
     @GetMapping("/get/placeTagIds")
     List<Long> listPlaceTagIds(@RequestParam("tagName") String tagName);

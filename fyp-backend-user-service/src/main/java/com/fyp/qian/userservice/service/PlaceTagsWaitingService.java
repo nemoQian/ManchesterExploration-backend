@@ -29,4 +29,6 @@ public interface PlaceTagsWaitingService extends IService<PlaceTagsWaiting> {
      * @return
      */
     Page<PlaceTagWaitingListRequest> queryPlaceTagWaitingList (PageRequest pageRequest, HttpServletRequest request);
+
+    Long deletePlaceTagWaitingList (Long placeTagWaitingListId);
 }

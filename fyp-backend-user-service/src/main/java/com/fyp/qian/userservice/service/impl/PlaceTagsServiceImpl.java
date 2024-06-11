@@ -5,12 +5,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyp.qian.common.common.exception.BusinessException;
 import com.fyp.qian.model.enums.StateEnum;
 import com.fyp.qian.model.pojo.*;
+import com.fyp.qian.model.pojo.request.PlaceTagInsertRequest;
 import com.fyp.qian.model.pojo.request.PlaceTagOptionRequest;
 import com.fyp.qian.model.pojo.request.TagWaitingListRequest;
 import com.fyp.qian.userservice.service.PlaceTagsService;
 import com.fyp.qian.userservice.mapper.PlaceTagsMapper;
+import com.fyp.qian.userservice.service.PlaceTagsWaitingService;
+import com.fyp.qian.userservice.service.UserGroupRelationService;
 import com.google.gson.Gson;
 import io.micrometer.common.util.StringUtils;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
@@ -28,45 +32,82 @@ import static com.fyp.qian.common.constant.UserConstant.USER_LOGIN_STATE;
 public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags>
     implements PlaceTagsService{
 
+    @Resource
+    private PlaceTagsWaitingService placeTagsWaitingService;
+
+    @Resource
+    private UserGroupRelationService userGroupRelationService;
+
     @Override
-    public Long InsertPlaceTag(PlaceTags placeTags, HttpServletRequest request) {
-        if(placeTags==null){
+    public Long InsertPlaceTag(PlaceTagInsertRequest placeTagsRequest, HttpServletRequest request) {
+        User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (currentUser == null || currentUser.getDeleteState() == 1) {
+            throw new BusinessException(StateEnum.NO_LOGIN_ERROR);
+        }
+        PlaceTags placeTags = new PlaceTags();
+        if(placeTagsRequest==null){
             throw new BusinessException(StateEnum.PARAMS_EMPTY_ERROR);
         }
 
-        if (StringUtils.isBlank(placeTags.getTagName())) {
+        if (StringUtils.isBlank(placeTagsRequest.getTagName())) {
             throw new BusinessException(StateEnum.PARAMS_EMPTY_ERROR);
         }
 
-        if (placeTags.getTagParentId() == null) {
+        if (placeTagsRequest.getTagParentId() == null || placeTagsRequest.getTagParentId() == 0) {
             placeTags.setTagParentId(-1L);
+            placeTagsRequest.setTagParentId(-1L);
+            placeTagsRequest.setOsmId(0L);
         }
 
-        if (placeTags.getTagShownStatus() == null) {
+        if (placeTagsRequest.getTagVisibility() == null) {
             throw new BusinessException(StateEnum.PARAMS_EMPTY_ERROR);
+        }
+
+        if (placeTagsRequest.getTagVisibility() == 2){
+            placeTagsRequest.setTagBelongs(currentUser.getId());
         }
 
         QueryWrapper<PlaceTags> placeTagsQueryWrapper = new QueryWrapper<>();
-        placeTagsQueryWrapper.eq("osm_id", placeTags.getOsmId());
-        placeTagsQueryWrapper.eq("tag_parent_id", placeTags.getTagParentId());
-        placeTagsQueryWrapper.eq("tag_shown_status", placeTags.getTagShownStatus());
-        placeTagsQueryWrapper.eq("tag_name", placeTags.getTagName());
-        placeTagsQueryWrapper.eq("tag_belongs", placeTags.getTagBelongs());
+        placeTagsQueryWrapper.eq("osm_id", placeTagsRequest.getOsmId());
+        placeTagsQueryWrapper.eq("tag_parent_id", placeTagsRequest.getTagParentId());
+        placeTagsQueryWrapper.eq("tag_shown_status", placeTagsRequest.getTagVisibility());
+        placeTagsQueryWrapper.eq("tag_name", placeTagsRequest.getTagName());
+        placeTagsQueryWrapper.eq("tag_belongs", placeTagsRequest.getTagBelongs());
         long count = this.count(placeTagsQueryWrapper);
         if (count > 0) {
             throw new BusinessException(StateEnum.DUPLICATE_TAG_ERROR);
         }
 
-        if (placeTags.getTagShownStatus() == 0) {
+        if (placeTagsRequest.getTagVisibility() == 0) {
             placeTags.setApprovalState(1);
         }
+        else {
+            placeTags.setApprovalState(0);
+        }
+
+        placeTags.setUserId(currentUser.getId());
+        placeTags.setTagName(placeTagsRequest.getTagName());
+        placeTags.setTagBelongs(placeTagsRequest.getTagBelongs());
+        placeTags.setTagParentId(placeTagsRequest.getTagParentId());
+        placeTags.setOsmId(placeTagsRequest.getOsmId());
+        placeTags.setTagShownStatus(placeTagsRequest.getTagVisibility());
         this.save(placeTags);
-        return null;
+
+        placeTagsWaitingService.removeById(placeTagsRequest.getId());
+
+        return placeTags.getId();
     }
 
     @Override
     public String placeTagsListShown(HttpServletRequest request) {
-        return generateGlobalPlaceTags();
+        User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        List<TagsTree> tagsTreeList = generateGlobalPlaceTags();
+        Gson gson = new Gson();
+        if (currentUser == null || currentUser.getDeleteState() == 1) {
+            return gson.toJson(tagsTreeList);
+        }
+        tagsTreeList.addAll(generatePlaceTagsTree(currentUser.getId()));
+        return gson.toJson(tagsTreeList);
     }
 
     @Override
@@ -95,6 +136,7 @@ public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags
         placeTagsQueryWrapper.eq("tag_parent_id", -1);
 
         if (placeTagOptionRequest.getTagShownState() == 0) {
+            placeTagsQueryWrapper.eq("tag_shown_status", 0);
             placeTagsQueryWrapper.eq("approval_state", 0);
         }
 
@@ -119,7 +161,56 @@ public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags
         return selectTrees;
     }
 
-    private String generateGlobalPlaceTags(){
+    private List<Long> getGroupIdList(Long userId) {
+        List<Long> groupIdList = new ArrayList<>();
+        QueryWrapper<UserGroupRelation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        List<UserGroupRelation> userGroupRelations = userGroupRelationService.list(queryWrapper);
+        for (UserGroupRelation userGroupRelation : userGroupRelations) {
+            groupIdList.add(userGroupRelation.getGroupId());
+        }
+        return groupIdList;
+    }
+
+    private List<TagsTree> generatePlaceTagsTree(Long userId){
+        QueryWrapper<PlaceTags> placeTagsQueryWrapper = new QueryWrapper<>();
+        List<Long> getGroupIdList = getGroupIdList(userId);
+        List<PlaceTags> list = this.baseMapper.selectDistinctTagsByTagBelongs(userId,-1,2,0);
+        List<TagsTree> tagsTreeList = new ArrayList<>();
+        placeTagsQueryWrapper.clear();
+        for(PlaceTags placeTags : list){
+            TagsTree tagsTree = fillInTagData(placeTags, false);
+            List<PlaceTags> childTags = this.baseMapper.selectDistinctTagsWithoutId(placeTags.getId(),2,0);
+            List<TagsTree> childTagsTree = new ArrayList<>();
+            for (PlaceTags childTag : childTags){
+                TagsTree childTagTree = fillInTagData(childTag,true);
+                childTagsTree.add(childTagTree);
+            }
+            tagsTree.setChildren(childTagsTree);
+            tagsTreeList.add(tagsTree);
+        }
+
+        list.clear();
+        for(Long groupId : getGroupIdList){
+            list.addAll(this.baseMapper.selectDistinctTagsByTagBelongs(groupId, -1, 1, 0));
+        }
+        placeTagsQueryWrapper.clear();
+        for(PlaceTags placeTags : list){
+            TagsTree tagsTree = fillInTagData(placeTags, false);
+            List<PlaceTags> childTags = this.baseMapper.selectDistinctTagsWithoutId(placeTags.getId(),1,0);
+            List<TagsTree> childTagsTree = new ArrayList<>();
+            for (PlaceTags childTag : childTags){
+                TagsTree childTagTree = fillInTagData(childTag,true);
+                childTagsTree.add(childTagTree);
+            }
+            tagsTree.setChildren(childTagsTree);
+            tagsTreeList.add(tagsTree);
+        }
+
+        return tagsTreeList;
+    }
+
+    private List<TagsTree> generateGlobalPlaceTags(){
         QueryWrapper<PlaceTags> placeTagsQueryWrapper = new QueryWrapper<>();
         List<PlaceTags> list = this.baseMapper.selectDistinctTagsWithId(-1,0,0);
         List<TagsTree> tagsTreeList = new ArrayList<>();
@@ -135,9 +226,8 @@ public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags
             tagsTree.setChildren(childTagsTree);
             tagsTreeList.add(tagsTree);
         }
-        Gson gson = new Gson();
 
-        return gson.toJson(tagsTreeList);
+        return tagsTreeList;
     }
 
     private TagsTree fillInTagData(PlaceTags tag, boolean isLeaf) {
@@ -146,6 +236,9 @@ public class PlaceTagsServiceImpl extends ServiceImpl<PlaceTagsMapper, PlaceTags
         tagsTree.setTitle(tag.getTagName());
         tagsTree.setLeaf(isLeaf);
         tagsTree.setChildren(new ArrayList<>());
+        if(!isLeaf){
+            tagsTree.setDisabled(true);
+        }
 
         return tagsTree;
     }

@@ -11,7 +11,7 @@ public class PlaceTagWaitingListRequest extends PageRequest implements Serializa
     @Serial
     private static final long serialVersionUID = 3191241716373120793L;
 
-    private int id;
+    private long id;
 
     private long osmId;
 

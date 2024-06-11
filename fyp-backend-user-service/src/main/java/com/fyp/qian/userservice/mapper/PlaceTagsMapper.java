@@ -29,6 +29,15 @@ public interface PlaceTagsMapper extends BaseMapper<PlaceTags> {
     List<PlaceTags> selectDistinctTagsWithoutId(@Param("tagParentId") long tagParentId,
                                              @Param("tagShownState") int tagShownState,
                                              @Param("approvalState") int approvalState);
+
+    @Select("SELECT DISTINCT id, tag_name FROM place_tags WHERE tag_parent_id = #{tagParentId} " +
+            "AND tag_belongs = #{tagBelongs} AND tag_shown_status = #{tagShownState} " +
+            "AND approval_state = #{approvalState} " +
+            "ORDER BY tag_name")
+    List<PlaceTags> selectDistinctTagsByTagBelongs(@Param("tagBelongs") long tagBelongs,
+                                                   @Param("tagParentId") long tagParentId,
+                                                   @Param("tagShownState") int tagShownState,
+                                                   @Param("approvalState") int approvalState);
 }
 
 

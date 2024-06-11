@@ -47,6 +47,12 @@ public class PlaceTagsWaitingServiceImpl extends ServiceImpl<PlaceTagsWaitingMap
     }
 
     @Override
+    public Long deletePlaceTagWaitingList(Long placeTagWaitingListId) {
+        this.removeById(placeTagWaitingListId);
+        return placeTagWaitingListId;
+    }
+
+    @Override
     public Page<PlaceTagWaitingListRequest> queryPlaceTagWaitingList(PageRequest pageRequest, HttpServletRequest request) {
         User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
         if (currentUser == null || currentUser.getDeleteState() == 1) {
@@ -63,6 +69,7 @@ public class PlaceTagsWaitingServiceImpl extends ServiceImpl<PlaceTagsWaitingMap
 
         List<PlaceTagWaitingListRequest> responses = placeTagsWaitingDate.getRecords().stream().map(placeTagsWaiting -> {
             PlaceTagWaitingListRequest placeTagWaitingListResponse = new PlaceTagWaitingListRequest();
+            placeTagWaitingListResponse.setId(placeTagsWaiting.getId());
             placeTagWaitingListResponse.setOsmId(placeTagsWaiting.getOsmId());
             placeTagWaitingListResponse.setPlaceName(placeTagsWaiting.getOsmName());
             placeTagWaitingListResponse.setCreateDate(placeTagsWaiting.getCreateTime());

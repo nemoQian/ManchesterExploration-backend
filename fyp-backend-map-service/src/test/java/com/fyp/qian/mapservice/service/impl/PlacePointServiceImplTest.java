@@ -34,28 +34,28 @@ class PlacePointServiceImplTest {
         System.out.println(placePointService.findPlacePointCategories());
     }
 
-    @Test
-    void selectPointByTagKey() {
-//        System.out.println(placePointService.selectPointByTagKey("wheelchair"));
-        String key = "wheelchair";
-        List<PlacePoint> l = placePointService.selectPointByTagKey(key);
-        List<PlaceTags> l2 = new ArrayList<>();
-        for(PlacePoint p : l){
-            Map<String , String > tagMap = (Map<String, String>) p.getTags();
-            String value = tagMap.get(key);
-            String[] values = value.split(";");
-            for(String v : values){
-                PlaceTags placeTags = new PlaceTags();
-                placeTags.setOsmId(p.getOsmId());
-                placeTags.setTagName(v);
-                placeTags.setTagShownStatus(0);
-                placeTags.setTagParentId(3L);
-                placeTags.setTagBelongs(-1L);
-                l2.add(placeTags);
-//                System.out.println(placeTags);
-                userFeignClient.insertPointTag(placeTags);
-            }
-        }
-        System.out.println(l2.size());
-    }
+//    @Test
+//    void selectPointByTagKey() {
+////        System.out.println(placePointService.selectPointByTagKey("wheelchair"));
+//        String key = "wheelchair";
+//        List<PlacePoint> l = placePointService.selectPointByTagKey(key);
+//        List<PlaceTags> l2 = new ArrayList<>();
+//        for(PlacePoint p : l){
+//            Map<String , String > tagMap = (Map<String, String>) p.getTags();
+//            String value = tagMap.get(key);
+//            String[] values = value.split(";");
+//            for(String v : values){
+//                PlaceTags placeTags = new PlaceTags();
+//                placeTags.setOsmId(p.getOsmId());
+//                placeTags.setTagName(v);
+//                placeTags.setTagShownStatus(0);
+//                placeTags.setTagParentId(3L);
+//                placeTags.setTagBelongs(-1L);
+//                l2.add(placeTags);
+////                System.out.println(placeTags);
+//                userFeignClient.insertPointTag(placeTags);
+//            }
+//        }
+//        System.out.println(l2.size());
+//    }
 }

@@ -32,11 +32,11 @@ public class UserInnerController implements UserFeignClient {
         return userService.listByIds(ids);
     }
 
-    @Override
-    @PostMapping("/insertPointTags")
-    public void insertPointTag(@RequestBody PlaceTags placeTags) {
-        placeTagsService.InsertPlaceTag(placeTags, null);
-    }
+//    @Override
+//    @PostMapping("/insertPointTags")
+//    public void insertPointTag(@RequestBody PlaceTags placeTags) {
+//        placeTagsService.InsertPlaceTag(placeTags, null);
+//    }
 
     @GetMapping("/get/placeTagIds")
     @Override

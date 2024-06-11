@@ -13,15 +13,15 @@ class PlaceTagsServiceImplTest {
     @Resource
     private PlaceTagsServiceImpl placeTagsService;
 
-    @Test
-    void insertPlaceTag() {
-        PlaceTags placeTags = new PlaceTags();
-        placeTags.setOsmId(0L);
-        placeTags.setTagName("cuisine");
-        placeTags.setTagShownStatus(0);
-        placeTags.setTagBelongs(-1L);
-        placeTagsService.InsertPlaceTag(placeTags, null);
-    }
+//    @Test
+//    void insertPlaceTag() {
+//        PlaceTags placeTags = new PlaceTags();
+//        placeTags.setOsmId(0L);
+//        placeTags.setTagName("cuisine");
+//        placeTags.setTagShownStatus(0);
+//        placeTags.setTagBelongs(-1L);
+//        placeTagsService.InsertPlaceTag(placeTags, null);
+//    }
 
     @Test
     void placeTagsListShown() {
